@@ -1,0 +1,24 @@
+{
+  "name": "vue-i18n-exfiltrator",
+  "version": "0.1.0",
+  "description": "vue-i18n string extractor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "vue-i18n-exfiliator": "bin/vue-i18n-exfiltrator.js"
+  },
+  "keywords": [
+    "vue",
+    "i18n",
+    "extractor"
+  ],
+  "author": "Marco Ghidinelli <marcogh@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.1.5",
+    "string.prototype.matchall": "^4.0.0",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
