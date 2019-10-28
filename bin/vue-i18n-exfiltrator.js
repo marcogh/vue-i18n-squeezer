@@ -3,6 +3,7 @@
 const glob = require('glob')
 const fs = require('fs')
 const path = require('path')
+const mkdirp = require('mkdirp')
 const compiler = require('vue-template-compiler')
 const matchAll = require('string.prototype.matchall');
 
@@ -13,23 +14,35 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(basePath, 'package.json
 const supportedLocales = packageJson.config['supported-locales']
 const defaultLocale = packageJson.config['default-locale']
 
+let msgstrs = {}
+
 getTranslations = (content) => {
   //return content.match(/\$tc?[\r\n ]*["']\(.*\)["']/gm) || [];
   return content.matchAll(/\$tc? *\([\r\n ]*["']([^'"]+)["'][^\)]*\)/gm) || []
 }
 
-importLocales = () => {
-  locales = []
-  supportedLocales.forEach( (item) => {
-    console.log(item)
-    localeFile = fs.readFileSync(path.join(basePath, `src/locales/${item}.json`))
-    locales.push(
-      JSON.parse(localeFile)
-    )
+updateLocales = () => {
+  //locales = []
+  supportedLocales.forEach( (locale) => {
+    console.log(`importing ${locale} locales...`)
+    let localeFileName = path.join(basePath, `src/locales/${locale}.json`)
+    fs.copyFileSync(localeFileName, `${localeFileName}.old`)
+    let localeData = JSON.parse(fs.readFileSync(localeFileName))
+    //console.log(localeData)
+    msgstrs.translations.forEach( (msg) => {
+      if (!Object.keys(localeData[locale]).includes(msg)) {
+        if ( defaultLocale === locale) {
+          localeData[locale][msg] = msg // stesso valore
+        } else {
+          localeData[locale][msg] = null
+        }
+      }
+    })
     // load translation item
+    //console.log(localeData)
+    fs.writeFileSync(localeFileName, JSON.stringify(localeData, null, 2))
     
   })
-  console.log(locales)
 }
 
 exportLocales = () => {
@@ -52,35 +65,39 @@ runImport = () => {
       }
     }
   })
-  return JSON.stringify({
+  msgstrs = {
     'translations': translations,
     'plural_translations': pluralTranslations
-  }, null, 2)
+  }
 }
 
-runExport: () => {
+runExport = () => {
 
 }
 
-switch (process.argv[2]){
-  case 'import':
-    let imported = runImport()
-    console.log(imported)
-    importLocales()
-    break
-
-  case 'export':
-    let exported = runExport()
-    console.log(exported)
-
-    break
-
-  default:
-    console.log('vue-i18n-exfiltrate')
-    console.log(' usage:')
-    console.log('   vue-i18n-exfiltrate export')
-    console.log('     imports translations from source')
-    console.log('   vue-i18n-exfiltrate import')
-    console.log('     exports translations to source')
-  
+main = () => {
+  runImport()
+  updateLocales()
 }
+
+main()
+
+// switch (process.argv[2]){
+  // case 'import':
+    // runImport()
+    // updateLocales()
+    // break
+
+  // case 'export':
+    // let exported = runExport()
+    // console.log(exported)
+    // break
+
+  // default:
+    // console.log('vue-i18n-exfiltrate')
+    // console.log(' usage:')
+    // console.log('   vue-i18n-exfiltrate export')
+    // console.log('     imports translations from source')
+    // console.log('   vue-i18n-exfiltrate import')
+    // console.log('     exports translations to source')
+// }
