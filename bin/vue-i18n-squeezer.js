@@ -62,7 +62,7 @@ runImport = (vueFiles) => {
 }
 
 require('yargs')
-  .scriptName('vue-i18n-exfiltrator')
+  .scriptName('vue-i18n-squeezer')
   .usage('$0 <cmd> [args]')
   .command('update', 'update the translations', {
     vueFiles: {
