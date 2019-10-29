@@ -4,7 +4,6 @@ const glob = require('glob')
 const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
-const compiler = require('vue-template-compiler')
 const matchAll = require('string.prototype.matchall');
 
 matchAll.shim() // monkey patching missing matchAll
@@ -18,7 +17,7 @@ let msgstrs = {}
 
 getTranslations = (content) => {
   //return content.match(/\$tc?[\r\n ]*["']\(.*\)["']/gm) || [];
-  return content.matchAll(/\$tc? *\([\r\n ]*["']([^'"]+)["'][^\)]*\)/gm) || []
+  return content.matchAll(/\$tc? *\([\r\n ]*["'`]([^'`"]+)["'`][^\)]*\)/gm) || []
 }
 
 updateLocales = () => {
