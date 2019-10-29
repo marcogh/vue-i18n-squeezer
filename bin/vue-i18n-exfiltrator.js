@@ -10,8 +10,6 @@ matchAll.shim() // monkey patching missing matchAll
 
 const basePath = path.resolve(process.cwd())
 const packageJson = JSON.parse(fs.readFileSync(path.join(basePath, 'package.json')).toString())
-const supportedLocales = packageJson.config['supported-locales']
-const defaultLocale = packageJson.config['default-locale']
 
 let msgstrs = {}
 
@@ -20,39 +18,32 @@ getTranslations = (content) => {
   return content.matchAll(/\$tc? *\([\r\n ]*["'`]([^'`"]+)["'`][^\)]*\)/gm) || []
 }
 
-updateLocales = () => {
+updateLocales = (localeFiles, defaultLocale) => {
   //locales = []
-  supportedLocales.forEach( (locale) => {
-    console.log(`importing ${locale} locales...`)
-    let localeFileName = path.join(basePath, `src/locales/${locale}.json`)
-    fs.copyFileSync(localeFileName, `${localeFileName}.old`)
-    let localeData = JSON.parse(fs.readFileSync(localeFileName))
-    //console.log(localeData)
+  let files = glob.sync(localeFiles)
+  files.forEach( (localeFile) => {
+    let [_, locale] = localeFile.match(/\/([a-zA-Z_-]+)\.json$/)
+    console.log(`import ${locale} locales from ${localeFile} ...`)
+    fs.copyFileSync(localeFile, `${localeFile}.old`)
+    let localeData = JSON.parse(fs.readFileSync(localeFile))
     msgstrs.translations.forEach( (msg) => {
-      if (!Object.keys(localeData[locale]).includes(msg)) {
+      if (!Object.keys(localeData).includes(msg)) {
         if ( defaultLocale === locale) {
-          localeData[locale][msg] = msg // stesso valore
+          localeData[msg] = msg // stesso valore
         } else {
-          localeData[locale][msg] = null
+          localeData[msg] = null
         }
       }
     })
-    // load translation item
-    //console.log(localeData)
-    fs.writeFileSync(localeFileName, JSON.stringify(localeData, null, 2))
-    
+    fs.writeFileSync(localeFile, JSON.stringify(localeData, null, 2))
   })
 }
 
-exportLocales = () => {
-
-}
-
-runImport = () => {
+runImport = (vueFiles) => {
   const translations = []
   const pluralTranslations = []
 
-  let files = glob.sync('src/**/*.vue')
+  let files = glob.sync(vueFiles)
   files.forEach(file => {
     //console.log(`checking ${file}`)
     let content = fs.readFileSync(file).toString()
@@ -70,33 +61,33 @@ runImport = () => {
   }
 }
 
-runExport = () => {
-
-}
-
-main = () => {
-  runImport()
-  updateLocales()
-}
-
-main()
-
-// switch (process.argv[2]){
-  // case 'import':
-    // runImport()
-    // updateLocales()
-    // break
-
-  // case 'export':
-    // let exported = runExport()
-    // console.log(exported)
-    // break
-
-  // default:
-    // console.log('vue-i18n-exfiltrate')
-    // console.log(' usage:')
-    // console.log('   vue-i18n-exfiltrate export')
-    // console.log('     imports translations from source')
-    // console.log('   vue-i18n-exfiltrate import')
-    // console.log('     exports translations to source')
-// }
+require('yargs')
+  .scriptName('vue-i18n-exfiltrator')
+  .usage('$0 <cmd> [args]')
+  .command('update', 'update the translations', {
+    vueFiles: {
+      type: 'string',
+      describe: 'The Vue.js files you want to extract translations from',
+      demand: true,
+      alias: 'v',
+    },
+    localeFiles: {
+      type: 'string',
+      describe: 'The .json translation files you want to update',
+      demand: true,
+      alias: 'l',
+    },
+    defaultLocale: {
+      type: 'string',
+      describe: 'The default fallback locale. USE \'en\'',
+      default: 'en',
+    }
+  }, (argv) => {
+    const command = argv
+    runImport(command.vueFiles)
+    updateLocales(command.localeFiles, command.defaultLocale)
+  })
+  .help()
+  .demandCommand(1, '')
+  .showHelpOnFail(true)
+  .argv
