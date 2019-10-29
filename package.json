@@ -9,6 +9,11 @@
   "bin": {
     "vue-i18n-squeezer": "bin/vue-i18n-squeezer.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcogh/vue-i18n-squeezer"
+  },
+  "homepage": "https://github.com/marcogh/vue-i18n-squeezer",
   "keywords": [
     "vue",
     "i18n",
@@ -16,6 +21,7 @@
   ],
   "author": "Marco Ghidinelli <marcogh@gmail.com>",
   "license": "MIT",
+  "homepage": "https://github.com/marcogh/vue-i18n-squeezer",
   "dependencies": {
     "glob": "^7.1.5",
     "mkdirp": "^0.5.1",
