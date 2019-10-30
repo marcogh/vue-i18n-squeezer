@@ -4,7 +4,7 @@
   "description": "vue-i18n string extractor",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "bin": {
     "vue-i18n-squeezer": "bin/vue-i18n-squeezer.js"
@@ -21,11 +21,13 @@
   ],
   "author": "Marco Ghidinelli <marcogh@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/marcogh/vue-i18n-squeezer",
   "dependencies": {
     "glob": "^7.1.5",
     "mkdirp": "^0.5.1",
     "string.prototype.matchall": "^4.0.0",
     "yargs": "^14.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.2"
   }
 }
