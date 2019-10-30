@@ -4,7 +4,8 @@ const glob = require('glob')
 const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
-const matchAll = require('string.prototype.matchall');
+const matchAll = require('string.prototype.matchall')
+const getTranslations = require('../lib/getTranslations')
 
 matchAll.shim() // monkey patching missing matchAll
 
@@ -12,11 +13,6 @@ const basePath = path.resolve(process.cwd())
 const packageJson = JSON.parse(fs.readFileSync(path.join(basePath, 'package.json')).toString())
 
 let msgstrs = {}
-
-getTranslations = (content) => {
-  //return content.match(/\$tc?[\r\n ]*["']\(.*\)["']/gm) || [];
-  return content.matchAll(/\$tc? *\([\r\n ]*["'`]([^'`"]+)["'`][^\)]*\)/gm) || []
-}
 
 updateLocales = (localeFiles, defaultLocale) => {
   //locales = []
