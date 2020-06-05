@@ -21,6 +21,24 @@ describe('Regex', function() {
 </i18n>
 `
          let result = getTranslations(text)
-         assert.equal(result.length, 2)
-    })
+         assert.equal(result.length, 3)
+    });
+    it('should match', function(){
+         let text = `
+  address: {
+    name: 'ENTER_ADDRESS',
+    description: VueI18n.t('Enter IP address'),
+  },
+  port: {
+    name: "ENTER_PORT",
+    description: VueI18n.t("Enter port number"),
+  },
+  token: {
+    name: 'ENTER_TOKEN',
+    description: VueI18n.t('Enter Token {0} value', [token])
+  }
+`
+         let result = getTranslations(text)
+         assert.equal(result.length, 3)
+    });
 })
