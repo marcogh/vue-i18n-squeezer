@@ -2,5 +2,7 @@
 
 usage: 
 
-    ⚡ npx vue-i18n-squeezer update -v 'src/**/*.vue' -l 'src/locales/*.json'
+    ⚡ npx vue-i18n-squeezer update -v 'src/**/*.{vue,js}' -l 'src/locales/*.json'
 
+test:
+    ⚡ npm test
