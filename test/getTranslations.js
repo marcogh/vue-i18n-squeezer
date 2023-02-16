@@ -4,8 +4,8 @@ const matchAll = require('string.prototype.matchall')
 
 matchAll.shim() // monkey patching missing matchAll
 
-describe('Regex', function() {
-    it('should match', function(){
+describe('Testing regural expression', function() {
+    it('result should match test data', function(){
          let text = `
 <i18n
   raw console="ok" test="12345"
@@ -17,13 +17,18 @@ describe('Regex', function() {
 </i18n>
 
 <i18n path="You can return to the {0}" tag="p" for="Homepage">
+        <b-button href="/">{{ t('Homepage')}}</b-button>
         <b-button href="/">{{ $t('Homepage')}}</b-button>
+        <b-button href="/">{{ tc('Homepage')}}</b-button>
+        <b-button href="/">{{ $tc('Homepage')}}</b-button>
+        <b-button href="/">{{ run_t('Homepage')}}</b-button>
+        <b-button href="/">{{ run_tc('Homepage')}}</b-button>
 </i18n>
 `
          let result = getTranslations(text)
-         assert.equal(result.length, 3)
+         assert.equal(result.length, 6)
     });
-    it('should match', function(){
+    it('result should match test data', function(){
          let text = `
   address: {
     name: 'ENTER_ADDRESS',
