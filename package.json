@@ -1,6 +1,6 @@
 {
   "name": "vue-i18n-squeezer",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "vue-i18n string extractor",
   "main": "index.js",
   "scripts": {
