@@ -45,9 +45,9 @@ runImport = (vueFiles) => {
     let content = fs.readFileSync(file).toString()
     for(let match of getTranslations(content)){
       if ( match[0].match(/\$tc.*/) ){
-        pluralTranslations.push(match[1])
+        pluralTranslations.push(match[2])
       } else {
-        translations.push(match[1])
+        translations.push(match[2])
       }
     }
   })
